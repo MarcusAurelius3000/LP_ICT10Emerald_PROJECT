@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SKU Generator</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --green-900: #183f2d;
+      --green-700: #2f7048;
+      --green-600: #43865a;
+      --green-100: #e7f1e9;
+      --green-050: #f2f7f3;
+      --ink: #24352a;
+      --muted: #66766a;
+      --line: #d8e3da;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--green-050);
+      color: var(--ink);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 68px;
+      gap: 24px;
+      padding: 12px max(24px, calc((100% - 1120px) / 2));
+      border-bottom: 3px solid #8bb797;
+      background: var(--green-900);
+      color: white;
+    }
+
+    header strong {
+      font-size: 1.15rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    nav a {
+      padding: 10px 12px;
+      border-radius: 6px;
+      color: #f4faf5;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: start;
+      gap: 22px;
+      width: min(1120px, calc(100% - 40px));
+      margin: 42px auto;
+    }
+
+    section {
+      min-width: 0;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--green-600);
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 12px 28px rgba(24, 63, 45, 0.06);
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      color: var(--green-900);
+      font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: 1.9rem;
+      line-height: 1.2;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      padding: 14px 10px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background: var(--green-050);
+    }
+
+    .menu-item-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input:not([type="checkbox"]), select {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 13px;
+      border: 1px solid #cbd9ce;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    input:not([type="checkbox"]):focus, select:focus {
+      border-color: var(--green-600);
+      outline: 3px solid var(--green-100);
+    }
+
+    input[type="checkbox"] {
+      flex: 0 0 19px;
+      width: 19px;
+      height: 19px;
+      margin: 0;
+      padding: 0;
+      accent-color: var(--green-700);
+    }
+
+    .menu-price {
+      color: var(--green-700);
+      font-variant-numeric: tabular-nums;
+    }
+
+    button {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 22px;
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--green-700);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 140ms ease, transform 140ms ease;
+    }
+
+    button:hover {
+      background: var(--green-900);
+      transform: translateY(-1px);
+    }
+
+    button:focus-visible, nav a:focus-visible {
+      outline: 3px solid #91bd9b;
+      outline-offset: 3px;
+    }
+
+    #sku-output, #receipt-output {
+      min-height: 56px;
+      margin: 20px 0 0;
+      padding: 14px 16px;
+      border-left: 3px solid var(--green-600);
+      border-radius: 0 6px 6px 0;
+      background: var(--green-050);
+      white-space: pre-line;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+        width: min(620px, calc(100% - 32px));
+        margin: 28px auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        padding: 14px 16px;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        margin-left: -10px;
+      }
+
+      section {
+        padding: 22px 18px;
+      }
+
+      h1 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Skewer</strong>
+    <nav>
+      <a href="#sku">SKU Generator</a>
+      <a href="#receipt">Receipt Generator</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="sku">
+      <h1>SKU Generator</h1>
+
+      <label for="category">Category</label>
+      <select id="category">
+        <option value="Ramen &amp; Noodles">Ramen &amp; Noodles</option>
+        <option value="Sushi &amp; Sashimi">Sushi &amp; Sashimi</option>
+        <option value="Rice &amp; Onigiri">Rice &amp; Onigiri</option>
+        <option value="Japanese Snacks">Japanese Snacks</option>
+        <option value="Tea &amp; Drinks">Tea &amp; Drinks</option>
+      </select>
+
+      <label for="product-name">Product Name</label>
+      <input id="product-name" type="text" placeholder="e.g. Coffee Beans">
+
+      <label for="quantity">Stock Quantity</label>
+      <input id="quantity" type="number" placeholder="e.g. 50">
+
+      <button id="generate-sku" type="button">Generate SKU</button>
+      <p id="sku-output">Your generated SKU will appear here.</p>
+    </section>
+
+    <section id="receipt">
+      <h1>Receipt Generator</h1>
+      <p>Select items for this order.</p>
+
+      <label class="menu-item">
+        <span class="menu-item-name"><input class="menu-choice" type="checkbox" data-name="Chicken Katsu Curry" data-price="320">Chicken Katsu Curry</span>
+        <strong class="menu-price">&#8369;320</strong>
+      </label>
+      <label class="menu-item">
+        <span class="menu-item-name"><input class="menu-choice" type="checkbox" data-name="Tonkotsu Ramen" data-price="380">Tonkotsu Ramen</span>
+        <strong class="menu-price">&#8369;380</strong>
+      </label>
+      <label class="menu-item">
+        <span class="menu-item-name"><input class="menu-choice" type="checkbox" data-name="Salmon Onigiri" data-price="250">Salmon Onigiri</span>
+        <strong class="menu-price">&#8369;250</strong>
+      </label>
+      <label class="menu-item">
+        <span class="menu-item-name"><input class="menu-choice" type="checkbox" data-name="Takoyaki (6 pcs)" data-price="280">Takoyaki (6 pcs)</span>
+        <strong class="menu-price">&#8369;280</strong>
+      </label>
+      <label class="menu-item">
+        <span class="menu-item-name"><input class="menu-choice" type="checkbox" data-name="White Mocha" data-price="210">White Mocha</span>
+        <strong class="menu-price">&#8369;210</strong>
+      </label>
+
+      <button id="create-order" type="button">Create Order</button>
+      <p id="receipt-output">Your receipt will appear here.</p>
+    </section>
+  </main>
+  <script>
+    const categoryInput = document.getElementById('category');
+    const productNameInput = document.getElementById('product-name');
+    const quantityInput = document.getElementById('quantity');
+    const generateButton = document.getElementById('generate-sku');
+    const output = document.getElementById('sku-output');
+    
+    generateButton.addEventListener('click', () => {
+        const productName = productNameInput.value.trim();
+        const quantity = Number(quantityInput.value.trim())
+        
+        if (!productName || !Number.isInteger(quantity) || quantity <= 0) {
+            output.textContent = "Enter a product name and a positive whole-number quantity.";
+            return;
+        }
+
+        const categoryCode = categoryInput.value.slice(0, 3).toUpperCase();
+        const productCode = productName.replaceAll(" ", "").slice(0, 4).toUpperCase();
+        const quantityCode = String(quantity).padStart(3, "0");
+
+        output.textContent = `Generated SKU: ${categoryCode}-${productCode}-${quantityCode}`;
+    });
+
+  const createOrderButton = document.getElementById('create-order');
+  const receiptOutput = document.getElementById('receipt-output');
+
+  createOrderButton.addEventListener('click', () => {
+    const selectedItems = document.querySelectorAll('.menu-choice:checked');
+
+    if (selectedItems.length === 0) {
+      receiptOutput.textContent = 'Select at least one menu item.';
+      return;
+    }
+
+    let subtotal = 0;
+    const itemLines = [];
+
+    selectedItems.forEach((item) => {
+      const price = Number(item.dataset.price);
+      subtotal += price;
+      itemLines.push(`${item.dataset.name} - PHP ${price.toFixed(2)}`);
+    });
+
+    const tax = subtotal * 0.12;
+    const total = subtotal + tax;
+
+    receiptOutput.textContent = [
+      'Receipt',
+      ...itemLines,
+      `Subtotal: PHP ${subtotal.toFixed(2)}`,
+      `VAT (12%): PHP ${tax.toFixed(2)}`,
+      `Total: PHP ${total.toFixed(2)}`
+    ].join('\n');
+  });
+  </script>
+</body>
+</html>
